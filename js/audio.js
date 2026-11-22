@@ -395,6 +395,180 @@ class RetroAudioEngine {
       osc.stop(now + 0.35);
     } catch (e) {}
   }
+
+  // Round 04: Elusive Button Evasion Sound
+  playEvasionPulse() {
+    if (!this.enabled) return;
+    this.ensureActive();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, now);
+      osc.frequency.exponentialRampToValueAtTime(1400, now + 0.04);
+
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+
+      osc.start(now);
+      osc.stop(now + 0.04);
+    } catch (e) {}
+  }
+
+  // Round 05: Dissonant Moral Judgment Tone
+  playMoralTone() {
+    if (!this.enabled) return;
+    this.ensureActive();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const osc1 = this.ctx.createOscillator();
+      const osc2 = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc1.type = 'sine';
+      osc2.type = 'triangle';
+      osc1.frequency.setValueAtTime(330, now);
+      osc2.frequency.setValueAtTime(348, now); // Minor second tension
+
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(this.masterGain);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + 0.45);
+      osc2.stop(now + 0.45);
+    } catch (e) {}
+  }
+
+  // Round 06: Memory Sequence Chime (step 1, 2, 3)
+  playMemoryChime(step = 1) {
+    if (!this.enabled) return;
+    this.ensureActive();
+    if (!this.ctx) return;
+
+    try {
+      const freqs = [523.25, 659.25, 783.99, 1046.5];
+      const freq = freqs[(step - 1) % freqs.length] || 523.25;
+      const now = this.ctx.currentTime;
+
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+
+      osc.start(now);
+      osc.stop(now + 0.28);
+    } catch (e) {}
+  }
+
+  // Round 07: Low Ambient Existential Tension Heartbeat
+  playTensionPulse() {
+    if (!this.enabled) return;
+    this.ensureActive();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(65, now);
+      osc.frequency.exponentialRampToValueAtTime(40, now + 0.5);
+
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+
+      osc.start(now);
+      osc.stop(now + 0.5);
+    } catch (e) {}
+  }
+
+  // Ending A: Grand Human Certificate Reveal Chord
+  playCertificateReveal() {
+    if (!this.enabled) return;
+    this.ensureActive();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const chord = [261.63, 329.63, 392.00, 523.25, 659.25]; // C Major triumph
+      chord.forEach((freq, idx) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = idx < 2 ? 'triangle' : 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+
+        osc.start(now);
+        osc.stop(now + 1.2);
+      });
+    } catch (e) {}
+  }
+
+  // Ending B: Sudden Audio Interruption & Harsh Alarm
+  playRobotAlarm() {
+    if (!this.enabled) return;
+    this.ensureActive();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const osc1 = this.ctx.createOscillator();
+      const osc2 = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc1.type = 'sawtooth';
+      osc2.type = 'square';
+      osc1.frequency.setValueAtTime(220, now);
+      osc2.frequency.setValueAtTime(110, now);
+
+      // 3 rapid alarm bleeps
+      for (let i = 0; i < 3; i++) {
+        const t = now + i * 0.18;
+        gain.gain.setValueAtTime(0.22, t);
+        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.12);
+      }
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(this.masterGain);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + 0.6);
+      osc2.stop(now + 0.6);
+    } catch (e) {}
+  }
 }
 
 window.RetroAudio = new RetroAudioEngine();

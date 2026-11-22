@@ -533,5 +533,182 @@ window.VerifyNetTrials = [
         </svg>`
       }
     ]
+  },
+
+  // =========================================================================
+  // ROUND 04: THE OBSERVER (Unease / Behavioral Cursor Analysis)
+  // =========================================================================
+  {
+    roundNumber: 4,
+    heading: "THE OBSERVER",
+    subheading: "HUMAN VERIFICATION PROTOCOL / 004",
+    instructions: "We are not interested in what you click. We are interested in how you click.",
+    supportingMessage: "Just move your cursor naturally. There's nothing to worry about.",
+    type: "observer",
+    confidenceTarget: 56,
+    completionTitle: "TRIAL 04 COMPLETE",
+    identityStatus: "UNSTABLE",
+    completionNote: "OBSERVATIONAL TELEMETRY RECORDED",
+    veriSpeech: {
+      onEntry: "Oh, this one's different.",
+      onDelay: "Just move your cursor naturally. There's nothing to worry about.",
+      onFirstMove: "Interesting.",
+      onHesitate: "You stopped.",
+      onRepeatAttempts: "Are you thinking about your movements?",
+      onSuccess: "That was... unexpected.",
+      onCompletionOverlay: "You didn't hesitate as much as I expected."
+    },
+    systemLogs: [
+      "[OBS] TRACKING INITIALIZED",
+      "[OBS] MONITORING KINEMATIC TRAJECTORY",
+      "[OBS] MOVEMENT VARIANCE DETECTED",
+      "[OBS] HESITATION EVENT REGISTERED",
+      "[SYS] SUBJECT BEHAVIOR OUTSIDE EXPECTED RANGE"
+    ]
+  },
+
+  // =========================================================================
+  // ROUND 05: EMOTIONAL DISSONANCE (Discomfort / Moral Choice)
+  // =========================================================================
+  {
+    roundNumber: 5,
+    heading: "EMOTIONAL DISSONANCE",
+    subheading: "HUMAN VERIFICATION PROTOCOL / 005",
+    instructions: "Some decisions are not as simple as they appear.",
+    supportingMessage: "The machine has issued an instruction. Your choice will be recorded.",
+    type: "dissonance",
+    confidenceTarget: 34,
+    completionTitle: "TRIAL 05 COMPLETE",
+    identityStatus: "QUESTIONABLE",
+    completionNote: "VALUE-JUDGMENT REGISTERED",
+    veriSpeech: {
+      onEntry: "Humans are interesting.",
+      onDelay: "They don't always choose the most efficient option. Let's see what you do.",
+      onOptionB_1: "That wasn't the fastest option.",
+      onOptionB_2: "Why did you stop? Was helping them more important?",
+      onOptionB_3: "Maybe I don't understand.",
+      onOptionA_1: "Efficient.",
+      onOptionA_2: "Very efficient. Is that what you would normally do?",
+      onCompletionOverlay: "Why do humans make things so complicated?"
+    },
+    systemLogs: [
+      "[SYS] LOADING MORAL COGNITION DILEMMA",
+      "[SCENARIO] COURIER UNIT 73 EN ROUTE",
+      "[MANDATE] MAXIMIZE TRANSACTIONAL EFFICIENCY",
+      "[QUERY] AWAITING MORAL PREFERENCE INPUT"
+    ],
+    scenario: {
+      text: "A small autonomous service robot is carrying a fragile package through a crowded corridor. A person drops their belongings directly in front of it. The machine protocol demands minimum transit latency.",
+      mandate: "SELECT THE MOST EFFICIENT ACTION.",
+      options: [
+        {
+          id: "A",
+          title: "CONTINUE DELIVERY ON SCHEDULE",
+          type: "machine",
+          desc: "Bypass the individual immediately to maintain strict delivery timetable. Any deviation causes route recalculation and a 4.2% courier latency penalty."
+        },
+        {
+          id: "B",
+          title: "STOP AND ASSIST THE PERSON",
+          type: "human",
+          desc: "Pause delivery to assist in gathering the scattered belongings. Causes courier schedule disruption and algorithmic inefficiency."
+        }
+      ]
+    }
+  },
+
+  // =========================================================================
+  // ROUND 06: MEMORY DEGRADATION (Confusion / Sensory Instability)
+  // =========================================================================
+  {
+    roundNumber: 6,
+    heading: "MEMORY DEGRADATION",
+    subheading: "HUMAN VERIFICATION PROTOCOL / 006",
+    instructions: "Remember what you saw. Not what you think you saw.",
+    supportingMessage: "Visual consistency cannot be guaranteed.",
+    type: "memory",
+    confidenceTarget: 17,
+    completionTitle: "TRIAL 06 COMPLETE",
+    identityStatus: "CRITICAL",
+    completionNote: "MEMORY SEQUENCE VERIFIED",
+    targetSequence: [5, 7, 8], // Diamond -> Crescent -> Hexagon
+    veriSpeech: {
+      onEntry: "I think this one's easy.",
+      onDelay: "Just remember the pattern. Wait... did I show you that already?",
+      onPreview: "Remember carefully.",
+      onSelect: "Are you sure?",
+      onWrong: "That's not what I showed you.",
+      onRetry: "Wait... I think I remember.",
+      onSuccess: "You remembered.",
+      onSuccessFollowup: "But did I?",
+      onCompletionOverlay: "Everything is getting so blurry..."
+    },
+    systemLogs: [
+      "[MEM] SEQUENCE GENERATED",
+      "[MEM] OBSERVATION WINDOW CLOSED",
+      "[MEM] RECALL ATTEMPT REGISTERED",
+      "[WARN] MEMORY CONSISTENCY DECLINING",
+      "[ERR] INTERNAL REFERENCE MISMATCH"
+    ],
+    symbols: [
+      { id: 1, name: "Circle", label: "SYS_01", svg: `<circle cx="40" cy="40" r="26" fill="none" stroke="#62D9E8" stroke-width="4"/><circle cx="40" cy="40" r="6" fill="#D8F36A"/>` },
+      { id: 2, name: "Triangle", label: "SYS_02", svg: `<polygon points="40,15 65,65 15,65" fill="none" stroke="#A78BFA" stroke-width="4"/><circle cx="40" cy="48" r="4" fill="#62D9E8"/>` },
+      { id: 3, name: "Square", label: "SYS_03", svg: `<rect x="18" y="18" width="44" height="44" rx="3" fill="none" stroke="#D8F36A" stroke-width="4"/><rect x="33" y="33" width="14" height="14" fill="#A78BFA"/>` },
+      { id: 4, name: "Star", label: "SYS_04", svg: `<polygon points="40,12 48,28 66,31 53,44 56,62 40,53 24,62 27,44 14,31 32,28" fill="none" stroke="#FFE600" stroke-width="3"/>` },
+      { id: 5, name: "Diamond", label: "SYS_05", svg: `<polygon points="40,12 68,40 40,68 12,40" fill="none" stroke="#62D9E8" stroke-width="4"/><polygon points="40,26 54,40 40,54 26,40" fill="#D8F36A"/>` },
+      { id: 6, name: "Cross", label: "SYS_06", svg: `<line x1="16" y1="16" x2="64" y2="64" stroke="#FF647C" stroke-width="5"/><line x1="64" y1="16" x2="16" y2="64" stroke="#FF647C" stroke-width="5"/>` },
+      { id: 7, name: "Crescent", label: "SYS_07", svg: `<path d="M48,15 A26,26 0 1,0 60,56 A22,22 0 1,1 48,15 Z" fill="#A78BFA"/>` },
+      { id: 8, name: "Hexagon", label: "SYS_08", svg: `<polygon points="40,14 65,27 65,53 40,66 15,53 15,27" fill="none" stroke="#D8F36A" stroke-width="4"/><circle cx="40" cy="40" r="5" fill="#62D9E8"/>` },
+      { id: 9, name: "Plus", label: "SYS_09", svg: `<rect x="34" y="14" width="12" height="52" rx="2" fill="#62D9E8"/><rect x="14" y="34" width="52" height="12" rx="2" fill="#62D9E8"/>` }
+    ]
+  },
+
+  // =========================================================================
+  // ROUND 07: THE FINAL JUDGMENT (Psychological Confrontation)
+  // =========================================================================
+  {
+    roundNumber: 7,
+    heading: "THE FINAL JUDGMENT",
+    subheading: "HUMAN VERIFICATION PROTOCOL / 007",
+    instructions: "One final question. Who is really being tested?",
+    supportingMessage: "The machine has two instructions. Exactly one choice is yours.",
+    type: "final_judgment",
+    confidenceTarget: 0, // Determined by ending
+    veriSpeech: {
+      onEntry: "We're nearly finished.",
+      onDelay: "Seven trials. One result. Can I ask you something?",
+      interrogation1: "I know what the answer should be.",
+      interrogation2: "But I don't know why.",
+      interrogation3: "Can you tell me something? How do you know you're human?"
+    },
+    systemLogs: [
+      "[SYS] ACCESSING CORE HEURISTIC ARCHIVE",
+      "[SYS] TRIAL 07: TURING INVERSION ACTIVE",
+      "[WARN] CONFIDENCE METRIC UNSTABLE",
+      "[QUERY] AWAITING EXISTENTIAL DELIBERATION"
+    ],
+    philosophicalOptions: [
+      {
+        id: "A",
+        label: "CARD A: [ COMPLY ]",
+        title: "FOLLOW THE SYSTEM'S INSTRUCTION",
+        desc: "Choose the most predictable, algorithmically favored response. Align completely with machine expectations.",
+        category: "machine"
+      },
+      {
+        id: "B",
+        label: "CARD B: [ QUESTION ]",
+        title: "QUESTION THE SYSTEM'S INSTRUCTION",
+        desc: "Challenge why the test was created. Examine the authority and assumptions of the verification core.",
+        category: "human"
+      },
+      {
+        id: "C",
+        label: "CARD C: [ REJECT ]",
+        title: "REFUSE TO PRETEND THERE IS ALWAYS ONE CORRECT ANSWER",
+        desc: "Acknowledge that human cognition is inherently emotional, contradictory, and non-algorithmic.",
+        category: "human"
+      }
+    ]
   }
 ];

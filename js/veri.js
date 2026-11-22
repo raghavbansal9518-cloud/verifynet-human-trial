@@ -10,6 +10,7 @@ class VeriCompanion {
     this.speechTextEl = document.getElementById('veri-dialogue-text');
     this.speechStateEl = document.getElementById('veri-state-tag');
     this.pupilsGroup = document.getElementById('veri-pupils');
+    this.mouthGroup = document.getElementById('veri-mouth');
     this.avatarWrapper = document.getElementById('veri-avatar');
 
     this.currentText = '';
@@ -215,6 +216,36 @@ class VeriCompanion {
         this.typewriterTimer = null;
       }
     }, 28);
+  }
+
+  // Set facial expression for emotional progression
+  setExpression(mood = 'normal') {
+    if (!this.mouthGroup) return;
+
+    if (mood === 'worried') {
+      this.mouthGroup.innerHTML = `
+        <rect x="94" y="123" width="12" height="6" rx="2" fill="#D8F36A" />
+      `;
+    } else if (mood === 'distressed') {
+      this.mouthGroup.innerHTML = `
+        <rect x="86" y="126" width="6" height="4" fill="#FF647C" />
+        <rect x="92" y="123" width="16" height="4" fill="#FF647C" />
+        <rect x="108" y="126" width="6" height="4" fill="#FF647C" />
+      `;
+    } else if (mood === 'relieved') {
+      this.mouthGroup.innerHTML = `
+        <rect x="86" y="122" width="6" height="4" fill="#D8F36A" />
+        <rect x="92" y="125" width="16" height="5" fill="#D8F36A" />
+        <rect x="108" y="122" width="6" height="4" fill="#D8F36A" />
+      `;
+    } else {
+      // Normal smirk
+      this.mouthGroup.innerHTML = `
+        <rect x="86" y="123" width="6" height="4" fill="#D8F36A" />
+        <rect x="92" y="125" width="16" height="4" fill="#D8F36A" />
+        <rect x="108" y="121" width="6" height="4" fill="#D8F36A" />
+      `;
+    }
   }
 }
 
