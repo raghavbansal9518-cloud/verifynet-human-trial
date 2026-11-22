@@ -402,18 +402,15 @@ class VerifyNetGameEngine {
     gridEl.querySelectorAll('.captcha-tile').forEach(tileEl => {
       const tileId = parseInt(tileEl.dataset.tileId, 10);
 
-      const toggleTile = () => {
+      const toggleTile = (e) => {
+        if (e) e.stopPropagation();
         if (this.isProcessing) return;
 
         if (this.selectedTileIds.has(tileId)) {
           this.selectedTileIds.delete(tileId);
-          tileEl.classList.remove('selected');
-          tileEl.setAttribute('aria-pressed', 'false');
           if (window.RetroAudio) window.RetroAudio.playTileSelect(false);
         } else {
           this.selectedTileIds.add(tileId);
-          tileEl.classList.add('selected');
-          tileEl.setAttribute('aria-pressed', 'true');
           if (window.RetroAudio) window.RetroAudio.playTileSelect(true);
 
           if (this.veri && trial.veriSpeech) {
@@ -425,6 +422,14 @@ class VerifyNetGameEngine {
           }
         }
 
+        // Strict bi-directional synchronization between Set and DOM elements
+        gridEl.querySelectorAll('.captcha-tile').forEach(t => {
+          const id = parseInt(t.dataset.tileId, 10);
+          const isSelected = this.selectedTileIds.has(id);
+          t.classList.toggle('selected', isSelected);
+          t.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+        });
+
         countEl.textContent = this.selectedTileIds.size;
         verifyBtn.disabled = this.selectedTileIds.size === 0;
 
@@ -435,7 +440,7 @@ class VerifyNetGameEngine {
       tileEl.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          toggleTile();
+          toggleTile(e);
         }
       });
     });
@@ -514,7 +519,7 @@ class VerifyNetGameEngine {
       }
 
       this.isProcessing = false;
-      verifyBtn.disabled = false;
+      verifyBtn.disabled = this.selectedTileIds.size === 0;
     }
   }
 
@@ -577,8 +582,21 @@ class VerifyNetGameEngine {
     arenaEl.querySelectorAll('.anomaly-card').forEach(cardEl => {
       const cardId = cardEl.dataset.cardId;
 
-      const selectCard = () => {
+      const selectCard = (e) => {
+        if (e) e.stopPropagation();
         if (this.isProcessing) return;
+
+        if (this.selectedCardId === cardId) {
+          // Deselect card when clicked again
+          this.selectedCardId = null;
+          cardEl.classList.remove('selected');
+          cardEl.setAttribute('aria-pressed', 'false');
+          readoutEl.textContent = 'NONE';
+          confirmBtn.disabled = true;
+          if (window.RetroAudio) window.RetroAudio.playTileSelect(false);
+          if (feedbackEl) feedbackEl.classList.remove('active', 'error', 'success');
+          return;
+        }
 
         arenaEl.querySelectorAll('.anomaly-card').forEach(c => {
           c.classList.remove('selected');
@@ -604,7 +622,7 @@ class VerifyNetGameEngine {
       cardEl.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          selectCard();
+          selectCard(e);
         }
       });
     });
@@ -1205,15 +1223,52 @@ class VerifyNetGameEngine {
       }, 3500);
     };
 
+    // Slot Chip Direct Deselect Click Handlers
+    [
+      document.getElementById('seq-slot-1'),
+      document.getElementById('seq-slot-2'),
+      document.getElementById('seq-slot-3')
+    ].forEach((slot, idx) => {
+      if (slot) {
+        slot.style.cursor = 'pointer';
+        slot.title = 'Click to remove from sequence';
+        slot.addEventListener('click', () => {
+          if (this.isProcessing) return;
+          if (this.playerSequence[idx] !== undefined) {
+            this.playerSequence.splice(idx, 1);
+            this.updateMemorySequenceChips();
+            verifyBtn.disabled = this.playerSequence.length !== 3;
+            if (feedback) feedback.classList.remove('active', 'error', 'success');
+            if (window.RetroAudio) window.RetroAudio.playTileSelect(false);
+          }
+        });
+      }
+    });
+
     // Attach Symbol Click Handlers
     document.querySelectorAll('.memory-symbol-card').forEach(card => {
       const symId = parseInt(card.dataset.symId, 10);
 
-      const addSymbol = () => {
-        if (this.isProcessing || this.playerSequence.length >= 3) return;
+      const addSymbol = (e) => {
+        if (e) e.stopPropagation();
+        if (this.isProcessing) return;
 
+        // If symbol already in sequence: DESELECT it cleanly
+        const existingIdx = this.playerSequence.indexOf(symId);
+        if (existingIdx !== -1) {
+          this.playerSequence.splice(existingIdx, 1);
+          if (window.RetroAudio) window.RetroAudio.playTileSelect(false);
+          this.updateMemorySequenceChips();
+          verifyBtn.disabled = this.playerSequence.length !== 3;
+          if (feedback) feedback.classList.remove('active', 'error', 'success');
+          return;
+        }
+
+        // Prevent overflow if already 3 items selected
+        if (this.playerSequence.length >= 3) return;
+
+        // Append to sequence in exact click order
         this.playerSequence.push(symId);
-        card.classList.add('selected');
         if (window.RetroAudio) window.RetroAudio.playTileSelect(true);
 
         this.updateMemorySequenceChips();
@@ -1222,13 +1277,14 @@ class VerifyNetGameEngine {
           verifyBtn.disabled = false;
           if (this.veri) this.veri.setDialogue(trial.veriSpeech.onSelect, "SEQUENCE READY");
         }
+        if (feedback) feedback.classList.remove('active', 'error', 'success');
       };
 
       card.addEventListener('click', addSymbol);
       card.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          addSymbol();
+          addSymbol(e);
         }
       });
     });
@@ -1236,15 +1292,17 @@ class VerifyNetGameEngine {
     clearBtn.addEventListener('click', () => {
       if (this.isProcessing) return;
       this.playerSequence = [];
-      document.querySelectorAll('.memory-symbol-card').forEach(c => c.classList.remove('selected'));
       this.updateMemorySequenceChips();
       verifyBtn.disabled = true;
       if (feedback) feedback.classList.remove('active', 'error', 'success');
       if (window.RetroAudio) window.RetroAudio.playClick();
+      this.addLog("[MEM] SEQUENCE CLEARED", "mem");
     });
 
     replayBtn.addEventListener('click', () => {
       if (this.isProcessing) return;
+      this.playerSequence = [];
+      this.updateMemorySequenceChips();
       document.querySelectorAll('.memory-symbol-card').forEach(c => {
         c.classList.remove('selected', 'degraded');
       });
@@ -1323,6 +1381,13 @@ class VerifyNetGameEngine {
           slot.classList.remove('filled');
         }
       }
+    });
+
+    // Bi-directionally synchronize selected class on cards
+    document.querySelectorAll('.memory-symbol-card').forEach(c => {
+      const id = parseInt(c.dataset.symId, 10);
+      c.classList.toggle('selected', this.playerSequence.includes(id));
+      c.setAttribute('aria-pressed', this.playerSequence.includes(id) ? 'true' : 'false');
     });
   }
 
@@ -1617,6 +1682,16 @@ class VerifyNetGameEngine {
     if (this.dom.interrogationOverlay) {
       this.dom.interrogationOverlay.classList.remove('active');
     }
+    if (this.dom.completionOverlay) {
+      this.dom.completionOverlay.classList.remove('active');
+    }
+    if (this.dom.modalSettings) {
+      this.dom.modalSettings.classList.remove('active');
+    }
+    this.selectedTileIds.clear();
+    this.selectedCardId = null;
+    this.playerSequence = [];
+    this.isProcessing = false;
     this.renderCurrentTrial();
   }
 

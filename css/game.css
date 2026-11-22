@@ -323,6 +323,10 @@
   transform: translateY(-2px);
 }
 
+.captcha-tile * {
+  pointer-events: none;
+}
+
 .captcha-tile svg {
   width: 100%;
   height: 100%;
@@ -396,6 +400,10 @@
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+}
+
+.anomaly-card * {
+  pointer-events: none;
 }
 
 .anomaly-card:hover {
@@ -648,12 +656,14 @@
   padding: 1.5rem;
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transition: all 0.3s ease;
 }
 
 .round-completion-overlay.active {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
 .completion-card {
@@ -871,6 +881,10 @@
   will-change: transform;
 }
 
+.btn-elusive-verify * {
+  pointer-events: none;
+}
+
 .btn-elusive-verify:hover {
   background: #eaff8f;
   box-shadow: 0 0 35px var(--color-lime);
@@ -988,6 +1002,10 @@
   position: relative;
 }
 
+.dissonance-option-card * {
+  pointer-events: none;
+}
+
 .dissonance-option-card:hover {
   border-color: var(--color-cyan);
   box-shadow: 0 0 16px var(--color-cyan-glow);
@@ -1065,6 +1083,12 @@
   font-family: var(--font-pixel);
   font-size: 0.65rem;
   color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.sequence-chip * {
+  pointer-events: none;
 }
 
 .sequence-chip.filled {
@@ -1111,6 +1135,10 @@
   cursor: pointer;
   transition: all var(--transition-fast);
   padding: 0.75rem;
+}
+
+.memory-symbol-card * {
+  pointer-events: none;
 }
 
 .memory-symbol-card:hover {
@@ -1190,6 +1218,10 @@
   gap: 0.5rem;
 }
 
+.philosophical-card * {
+  pointer-events: none;
+}
+
 .philosophical-card:hover {
   border-color: var(--color-purple);
   box-shadow: 0 0 18px var(--color-purple-glow);
@@ -1243,12 +1275,14 @@
   padding: 1.5rem;
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transition: all 0.4s ease;
 }
 
 .interrogation-overlay.active {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
 .interrogation-dialog-box {
@@ -1330,12 +1364,14 @@
   padding: 1.5rem;
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transition: all 0.5s ease;
 }
 
 .final-ending-overlay.active {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
 /* ENDING A: HUMAN CERTIFICATE */

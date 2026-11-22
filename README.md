@@ -78,6 +78,20 @@ The game features seven distinct, fully implemented trials exploring subconsciou
 
 ---
 
+## 🧪 Automated Testing & Choice-Recognition Verification
+
+The project includes an automated test suite verifying hit-testing, selection state synchronization, rapid-click handling, and exact answer validation across all seven rounds:
+
+```powershell
+# Run the choice-recognition and algorithm verification tests:
+node tests/choice-recognition.test.js
+
+# Run the DOM synchronization and CSS hit-testing rules test:
+node tests/engine-dom.test.js
+```
+
+---
+
 ## 🚀 Installation & Local Execution
 
 No build step, compilers, or package installations are required.
