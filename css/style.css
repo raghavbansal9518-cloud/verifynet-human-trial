@@ -1,0 +1,771 @@
+/* ==========================================================================
+   VERIFYNET — PAGE 01: THE HUMAN TRIAL (TITLE SCREEN)
+   Design Identity: Retro-Futuristic Indie Game Simulation
+   ========================================================================== */
+
+:root {
+  /* Requested Color Palette */
+  --bg-main: #10121B;
+  --bg-panel: #1A1D2A;
+  --bg-panel-hover: #222638;
+  --color-lime: #D8F36A;
+  --color-lime-glow: rgba(216, 243, 106, 0.35);
+  --color-purple: #A78BFA;
+  --color-purple-glow: rgba(167, 139, 250, 0.35);
+  --color-cyan: #62D9E8;
+  --color-cyan-glow: rgba(98, 217, 232, 0.35);
+  --text-main: #F2F1E9;
+  --text-secondary: #9294A1;
+  --color-error: #FF647C;
+  --border-subtle: rgba(146, 148, 161, 0.2);
+  --border-focus: #D8F36A;
+
+  /* Fonts */
+  --font-main: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* Layout & Spacing */
+  --header-height: 70px;
+  --max-width: 1200px;
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: var(--font-main);
+  line-height: 1.5;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Background Canvas */
+#bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* CRT Scanline & Screen Vignette Overlay */
+.crt-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 900;
+  background: 
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  background-size: 100% 3px, 6px 100%;
+  opacity: 0.65;
+  transition: opacity var(--transition-normal);
+}
+
+.crt-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 901;
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8), inset 0 0 200px rgba(16, 18, 27, 0.9);
+}
+
+/* Master Game Container */
+.game-container {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1.25rem 2rem 1.5rem 2rem;
+}
+
+/* ==========================================================================
+   2. TOP BAR
+   ========================================================================== */
+.game-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+  padding: 0 1.25rem;
+  background: rgba(26, 29, 42, 0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand-logo-icon {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(216, 243, 106, 0.08);
+  border: 1px solid var(--color-lime);
+  border-radius: 3px;
+  box-shadow: 0 0 10px var(--color-lime-glow);
+}
+
+.brand-logo-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: var(--color-lime);
+}
+
+.brand-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-family: var(--font-pixel);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: var(--color-lime);
+  text-shadow: 0 0 8px var(--color-lime-glow);
+}
+
+.brand-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  color: var(--color-purple);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* System Readouts (Right) */
+.system-status-section {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.build-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.25rem 0.6rem;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-cyan);
+  letter-spacing: 0.05em;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-cyan);
+  animation: pulseStatus 2s infinite;
+}
+
+@keyframes pulseStatus {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.85); }
+}
+
+/* Sound Toggle Button */
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: rgba(34, 38, 56, 0.7);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  padding: 0.35rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all var(--transition-fast);
+}
+
+.icon-btn:hover {
+  background: rgba(216, 243, 106, 0.15);
+  border-color: var(--color-lime);
+  color: var(--color-lime);
+  box-shadow: 0 0 10px var(--color-lime-glow);
+}
+
+.icon-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+/* ==========================================================================
+   3. MAIN HERO & STAGE LAYOUT
+   ========================================================================== */
+.hero-stage {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: 3rem;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Trust Pill */
+.trust-badge-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.trust-badge {
+  font-family: var(--font-pixel);
+  font-size: 0.65rem;
+  color: var(--color-purple);
+  background: rgba(167, 139, 250, 0.1);
+  padding: 0.45rem 0.85rem;
+  border-radius: 2px;
+  border: 1px solid var(--color-purple);
+  box-shadow: 0 0 12px var(--color-purple-glow);
+  letter-spacing: 0.1em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.trust-badge::before {
+  content: '▶';
+  font-size: 0.5rem;
+  color: var(--color-lime);
+}
+
+/* Main Headline */
+.main-headline {
+  font-size: clamp(3rem, 6.5vw, 5.25rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
+  text-transform: uppercase;
+}
+
+.headline-line-1 {
+  display: block;
+  color: var(--text-secondary);
+}
+
+.headline-line-2 {
+  display: inline-block;
+  color: var(--text-main);
+  position: relative;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+}
+
+.headline-highlight {
+  color: var(--color-lime);
+  text-shadow: 0 0 25px var(--color-lime-glow);
+}
+
+/* Animated Cursor */
+.terminal-cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 0.9em;
+  background-color: var(--color-lime);
+  margin-left: 0.15em;
+  vertical-align: baseline;
+  box-shadow: 0 0 10px var(--color-lime);
+  animation: blinkCursor 0.9s steps(2, start) infinite;
+}
+
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Supporting Text */
+.hero-description {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  max-width: 540px;
+  line-height: 1.6;
+  font-family: var(--font-main);
+  border-left: 2px solid var(--color-cyan);
+  padding-left: 1.15rem;
+  background: linear-gradient(90deg, rgba(98, 217, 232, 0.05), transparent);
+}
+
+/* ==========================================================================
+   5. GAME START PANEL
+   ========================================================================== */
+.game-start-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1rem;
+  max-width: 460px;
+}
+
+/* Primary Start Button */
+.btn-primary-start {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.15rem 1.75rem;
+  background: var(--color-lime);
+  color: #0c0e14;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  box-shadow: 0 0 20px var(--color-lime-glow), 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
+.btn-primary-start:hover {
+  transform: translateY(-2px);
+  background: #e4ff78;
+  box-shadow: 0 0 35px rgba(216, 243, 106, 0.6), 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+.btn-primary-start:active {
+  transform: translateY(1px);
+  box-shadow: 0 0 15px var(--color-lime-glow);
+}
+
+.btn-label-primary {
+  font-family: var(--font-pixel);
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.btn-subtext {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  margin-top: 0.25rem;
+  opacity: 0.85;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Scan sweep highlight over button */
+.btn-primary-start::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  transform: rotate(25deg);
+  animation: sweepHighlight 4.5s infinite;
+}
+
+@keyframes sweepHighlight {
+  0% { left: -60%; }
+  25%, 100% { left: 160%; }
+}
+
+/* Button Loading State */
+.btn-primary-start.loading {
+  pointer-events: none;
+  background: var(--color-cyan);
+  color: #051619;
+  box-shadow: 0 0 30px var(--color-cyan-glow);
+}
+
+.btn-primary-start.loading .btn-label-primary::after {
+  content: '...';
+  display: inline-block;
+  animation: loadingDots 1.2s infinite;
+}
+
+@keyframes loadingDots {
+  0% { content: '.'; }
+  33% { content: '..'; }
+  66% { content: '...'; }
+}
+
+/* Secondary Button Controls */
+.secondary-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-panel-hover);
+  border-color: var(--color-cyan);
+  color: var(--color-cyan);
+  box-shadow: 0 0 12px var(--color-cyan-glow);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+
+/* ==========================================================================
+   6. GAME INFORMATION STRIP & FOOTER
+   ========================================================================== */
+.game-bottom-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(146, 148, 161, 0.15);
+}
+
+.stat-indicators-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+}
+
+.stat-value {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-lime);
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 8px var(--color-lime-glow);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.stat-divider {
+  color: rgba(146, 148, 161, 0.4);
+  font-size: 0.85rem;
+}
+
+.stat-pill.unknown .stat-value {
+  color: var(--color-purple);
+  text-shadow: 0 0 8px var(--color-purple-glow);
+  animation: glitchText 4s infinite;
+}
+
+@keyframes glitchText {
+  0%, 94%, 100% { opacity: 1; transform: none; }
+  95% { opacity: 0.7; transform: skewX(-5deg); }
+  96% { opacity: 1; transform: skewX(5deg); }
+  97% { opacity: 0.5; }
+}
+
+.footer-message-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.1em;
+}
+
+.footer-warning {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffb17a;
+}
+
+.footer-warning::before {
+  content: '●';
+  color: #ffb17a;
+  font-size: 0.6rem;
+}
+
+.footer-credits {
+  color: rgba(146, 148, 161, 0.6);
+}
+
+/* ==========================================================================
+   9. START GAME CRT TRANSITION OVERLAY
+   ========================================================================== */
+.transition-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #090a10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.transition-curtain.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.terminal-boot-box {
+  background: #141722;
+  border: 1px solid var(--color-lime);
+  border-radius: 4px;
+  padding: 2rem 2.5rem;
+  width: 90%;
+  max-width: 580px;
+  box-shadow: 0 0 40px rgba(216, 243, 106, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.8);
+  font-family: var(--font-mono);
+}
+
+.boot-header {
+  font-family: var(--font-pixel);
+  font-size: 0.85rem;
+  color: var(--color-lime);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(216, 243, 106, 0.3);
+  padding-bottom: 0.65rem;
+}
+
+.boot-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--text-main);
+  min-height: 100px;
+}
+
+.boot-line {
+  opacity: 0;
+  transform: translateY(4px);
+  animation: bootLineIn 0.3s forwards;
+}
+
+@keyframes bootLineIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.boot-line.lime { color: var(--color-lime); }
+.boot-line.cyan { color: var(--color-cyan); }
+.boot-line.purple { color: var(--color-purple); }
+
+.boot-progress-bar {
+  margin-top: 1.25rem;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.boot-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--color-lime), var(--color-cyan));
+  box-shadow: 0 0 10px var(--color-lime);
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Screen flash on launch */
+.crt-flash {
+  position: fixed;
+  inset: 0;
+  background: white;
+  z-index: 1001;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.crt-flash.flash {
+  animation: flashBurst 0.35s ease-out;
+}
+
+@keyframes flashBurst {
+  0% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+
+/* ==========================================================================
+   REDUCED MOTION & ACCESSIBILITY
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .crt-overlay {
+    display: none !important;
+  }
+}
+
+/* When animations are disabled via in-game Settings */
+body.no-animations * {
+  animation: none !important;
+}
+
+body.no-crt .crt-overlay {
+  display: none !important;
+}
+
+/* ==========================================================================
+   11. RESPONSIVE DESIGN BREAKPOINTS
+   ========================================================================== */
+/* Tablet (<= 1024px) */
+@media (max-width: 1024px) {
+  .hero-stage {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    margin: 1.5rem 0;
+  }
+  .main-headline {
+    font-size: clamp(2.75rem, 7.5vw, 4.25rem);
+  }
+  .game-container {
+    padding: 1rem 1.5rem;
+  }
+}
+
+/* Mobile & Small Screens (<= 768px) */
+@media (max-width: 768px) {
+  .game-topbar {
+    height: auto;
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .brand-section {
+    gap: 0.75rem;
+  }
+  .system-status-section {
+    gap: 0.75rem;
+  }
+  .hero-stage {
+    display: flex;
+    flex-direction: column-reverse; /* Put VERI right above or near start controls */
+    gap: 2rem;
+  }
+  .main-headline {
+    font-size: 2.6rem;
+  }
+  .hero-description {
+    font-size: 0.98rem;
+  }
+  .game-start-panel {
+    max-width: 100%;
+  }
+  .stat-indicators-row {
+    gap: 1.25rem;
+    justify-content: space-between;
+  }
+  .footer-message-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+}
+
+/* Ultra Small (<= 420px) */
+@media (max-width: 420px) {
+  .main-headline {
+    font-size: 2.2rem;
+  }
+  .btn-label-primary {
+    font-size: 0.9rem;
+  }
+  .secondary-controls {
+    grid-template-columns: 1fr;
+  }
+  .build-tag {
+    display: none;
+  }
+}

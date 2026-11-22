@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VERiFYNET — The Human Trial</title>
+  <meta name="description" content="A psychological CAPTCHA experience presented as an indie retro-futuristic computer game simulation.">
+
+  <!-- Google Fonts: Space Grotesk, Press Start 2P, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Press+Start+2P&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/veri.css">
+  <link rel="stylesheet" href="css/modals.css">
+</head>
+<body>
+
+  <!-- Ambient Dynamic Canvas Background -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <!-- CRT Retro Effects Overlay (Toggleable in Settings) -->
+  <div class="crt-overlay" aria-hidden="true"></div>
+  <div class="crt-vignette" aria-hidden="true"></div>
+  <div id="crt-flash" class="crt-flash" aria-hidden="true"></div>
+
+  <!-- Master Game Screen Container -->
+  <div class="game-container">
+
+    <!-- ====================================================================
+         2. TOP BAR
+         ==================================================================== -->
+    <header class="game-topbar" role="banner">
+      <div class="brand-section">
+        <div class="brand-logo-icon" aria-hidden="true">
+          <!-- Pixel Lock & Eye Hybrid Vector Symbol -->
+          <svg viewBox="0 0 24 24">
+            <path d="M4 4h16v3H4V4zm0 13h16v3H4v-3zm3-10h10v7H7V7zm3 2v3h4V9h-4z"/>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <span class="brand-name">VERiFYNET</span>
+          <span class="brand-subtitle">THE HUMAN TRIAL</span>
+        </div>
+      </div>
+
+      <div class="system-status-section">
+        <span class="build-tag">BUILD 0.07</span>
+        <div class="status-badge" title="VerifyNet Engine Active">
+          <span class="pulse-dot"></span>
+          <span>SYSTEM ONLINE</span>
+        </div>
+        <button id="toggle-sound-main" class="icon-btn" title="Toggle 8-bit Audio">
+          <svg id="sound-icon" viewBox="0 0 24 24">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+          </svg>
+          <span id="sound-status-label">SND: ON</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         3. & 4. MAIN HERO & VERI CHARACTER COMPANION
+         ==================================================================== -->
+    <main class="hero-stage" role="main">
+
+      <!-- Left Hero Column -->
+      <section class="hero-content">
+        <div class="trust-badge-wrap">
+          <div class="trust-badge">A GAME ABOUT TRUST.</div>
+        </div>
+
+        <h1 class="main-headline">
+          <span class="headline-line-1">ARE YOU</span>
+          <span class="headline-line-2">
+            HUMAN<span class="headline-highlight">_</span><span class="terminal-cursor" aria-hidden="true"></span>
+          </span>
+        </h1>
+
+        <p class="hero-description">
+          Seven trials stand between you and verification. The machine has one job. You have one answer.
+        </p>
+
+        <!-- 5. GAME START PANEL -->
+        <div class="game-start-panel">
+          <button id="btn-start-trial" class="btn-primary-start" aria-label="Start The Human Trial Simulation">
+            <span class="btn-label-primary">▶ START THE TRIAL</span>
+            <span class="btn-subtext">PRESS TO ENTER THE SIMULATION</span>
+          </button>
+
+          <div class="secondary-controls">
+            <button id="btn-how-to-play" class="btn-secondary" aria-haspopup="dialog">
+              <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+              <span>HOW TO PLAY</span>
+            </button>
+            <button id="btn-settings" class="btn-secondary" aria-haspopup="dialog">
+              <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+              <span>SETTINGS</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Original Game Character VERI -->
+      <section class="veri-container" id="veri-companion" aria-label="VERI Game Companion">
+        
+        <!-- Speech Bubble with dynamic dialogue states -->
+        <div class="veri-speech-bubble" role="status" aria-live="polite">
+          <div class="veri-speech-header">
+            <span class="veri-id-tag">VERI // UNIT_01</span>
+            <span class="veri-state-tag" id="veri-state-tag">IDLE // OBSERVING</span>
+          </div>
+          <div class="veri-text-box">
+            <span id="veri-dialogue-text" class="dialogue-text">Oh. A player.</span>
+            <span class="dialogue-cursor" aria-hidden="true"></span>
+          </div>
+        </div>
+
+        <!-- VERI Avatar Vector Graphics & Floating Frame -->
+        <div class="veri-avatar-wrapper" id="veri-avatar" title="Click VERI to interact">
+          <div class="veri-backlight" aria-hidden="true"></div>
+          
+          <div class="veri-floating-body">
+            <!-- Custom Isometric/Pixel AI Character SVG -->
+            <svg class="veri-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <!-- Chassis Gradients -->
+                <linearGradient id="chassisGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#D8F36A" />
+                  <stop offset="100%" stop-color="#a6c434" />
+                </linearGradient>
+                <linearGradient id="purpleAccent" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#A78BFA" />
+                  <stop offset="100%" stop-color="#7C3AED" />
+                </linearGradient>
+                <linearGradient id="screenGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#141724" />
+                  <stop offset="100%" stop-color="#0A0B12" />
+                </linearGradient>
+                <filter id="neonLime" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              <!-- Anti-Grav Floating Pedestal / Lower Bracket -->
+              <path d="M72 165 L100 180 L128 165 L128 152 L100 162 L72 152 Z" fill="#6A5ACD" opacity="0.9" />
+              <path d="M85 167 L100 176 L115 167 L115 161 L100 168 L85 161 Z" fill="#D8F36A" />
+
+              <!-- Left Ear / Side Thruster Block -->
+              <polygon points="34,88 52,78 52,118 34,128" fill="#8EA824" />
+              <polygon points="22,96 34,88 34,128 22,136" fill="#D8F36A" />
+              <rect x="25" y="104" width="6" height="16" fill="#141724" />
+
+              <!-- Right Ear / Side Thruster Block -->
+              <polygon points="148,78 166,88 166,128 148,118" fill="#a6c434" />
+              <polygon points="166,88 178,96 178,136 166,128" fill="#8EA824" />
+              <rect x="169" y="104" width="6" height="16" fill="#141724" />
+
+              <!-- Head Top Crown / Antenna Cube -->
+              <polygon points="100,20 120,32 100,44 80,32" fill="#D8F36A" />
+              <polygon points="80,32 100,44 100,60 80,48" fill="#a6c434" />
+              <polygon points="100,44 120,32 120,48 100,60" fill="#7C3AED" />
+              <!-- Antenna sensor dot -->
+              <rect x="96" y="27" width="8" height="8" fill="#141724" />
+              <rect x="98" y="29" width="4" height="4" fill="#D8F36A" filter="url(#neonLime)" />
+
+              <!-- Main Chassis Isometric Head Frame -->
+              <polygon points="100,46 164,78 100,108 36,78" fill="#D8F36A" />
+              <polygon points="36,78 100,108 100,154 36,124" fill="#a6c434" />
+              <polygon points="100,108 164,78 164,124 100,154" fill="#4C3B7A" />
+
+              <!-- Front Monitor Bezel Frame (Facing Subject) -->
+              <rect x="52" y="76" width="96" height="70" rx="4" fill="#1A1D2D" stroke="#D8F36A" stroke-width="3" />
+              <rect x="55" y="79" width="90" height="64" rx="2" fill="url(#screenGrad)" />
+
+              <!-- Subtle Screen Grid Lines -->
+              <line x1="55" y1="95" x2="145" y2="95" stroke="rgba(216,243,106,0.08)" stroke-width="1" />
+              <line x1="55" y1="111" x2="145" y2="111" stroke="rgba(216,243,106,0.08)" stroke-width="1" />
+              <line x1="55" y1="127" x2="145" y2="127" stroke="rgba(216,243,106,0.08)" stroke-width="1" />
+
+              <!-- Eyelid Clip / Blink Group -->
+              <g class="veri-eyelids">
+                <!-- Expressive Eyes & Pupils (Tracks cursor coordinates) -->
+                <g id="veri-pupils" class="veri-eyes-group">
+                  <!-- Left Eye -->
+                  <rect x="71" y="94" width="16" height="16" rx="2" fill="#D8F36A" filter="url(#neonLime)" />
+                  <rect x="73" y="96" width="5" height="5" fill="#FFFFFF" />
+                  <rect x="79" y="102" width="6" height="6" fill="#141724" />
+
+                  <!-- Right Eye -->
+                  <rect x="113" y="94" width="16" height="16" rx="2" fill="#D8F36A" filter="url(#neonLime)" />
+                  <rect x="115" y="96" width="5" height="5" fill="#FFFFFF" />
+                  <rect x="121" y="102" width="6" height="6" fill="#141724" />
+
+                  <!-- Cheek / Eyebrow Tech Accents -->
+                  <rect x="68" y="90" width="8" height="2" fill="#A78BFA" />
+                  <rect x="124" y="90" width="8" height="2" fill="#A78BFA" />
+                </g>
+              </g>
+
+              <!-- Charming Pixel Smirk / Mouth -->
+              <g id="veri-mouth">
+                <rect x="86" y="123" width="6" height="4" fill="#D8F36A" />
+                <rect x="92" y="125" width="16" height="4" fill="#D8F36A" />
+                <rect x="108" y="121" width="6" height="4" fill="#D8F36A" />
+              </g>
+
+              <!-- Screen Glass Reflection -->
+              <path d="M57 81 L95 81 L65 141 L57 141 Z" fill="rgba(255,255,255,0.04)" />
+            </svg>
+          </div>
+
+          <div class="veri-ambient-shadow" aria-hidden="true"></div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- ====================================================================
+         6. GAME INFORMATION STRIP & FOOTER
+         ==================================================================== -->
+    <footer class="game-bottom-strip" role="contentinfo">
+      <div class="stat-indicators-row">
+        <div class="stat-pill">
+          <span class="stat-value">07</span>
+          <span class="stat-divider">—</span>
+          <span class="stat-label">TRIALS</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-value">01</span>
+          <span class="stat-divider">—</span>
+          <span class="stat-label">PLAYER</span>
+        </div>
+        <div class="stat-pill unknown">
+          <span class="stat-value">???</span>
+          <span class="stat-divider">—</span>
+          <span class="stat-label">TRUST LEVEL</span>
+        </div>
+      </div>
+
+      <div class="footer-message-bar">
+        <div class="footer-warning">
+          <span>NO SAVE FILE FOUND · GOOD LUCK, PLAYER.</span>
+        </div>
+        <div class="footer-credits">
+          <span>VERIFYNET SIMULATION · PSYCHOLOGICAL CAPTCHA PROTOCOL</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ====================================================================
+         MODALS: HOW TO PLAY & SETTINGS
+         ==================================================================== -->
+  
+  <!-- HOW TO PLAY MODAL -->
+  <div id="modal-how-to-play" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-htp-title" aria-hidden="true">
+    <div class="game-modal">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-badge">INFO</span>
+          <h2 id="modal-htp-title" class="modal-title">THE HUMAN TRIAL PROTOCOL</h2>
+        </div>
+        <button class="modal-close-btn" data-close-modal aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <ul class="rules-list">
+          <li class="rule-item">
+            <span class="rule-num">01</span>
+            <div class="rule-content">
+              <span class="rule-title">Complete seven challenges.</span>
+              <span class="rule-desc">Each trial examines subconscious human quirks: hesitation, rhythm, irrational instincts, and emotional dissonance.</span>
+            </div>
+          </li>
+          <li class="rule-item">
+            <span class="rule-num">02</span>
+            <div class="rule-content">
+              <span class="rule-title">Follow the instructions.</span>
+              <span class="rule-desc">Or question why they were issued. Some prompts reward obedience; others test whether you possess independent thought.</span>
+            </div>
+          </li>
+          <li class="rule-item">
+            <span class="rule-num">03</span>
+            <div class="rule-content">
+              <span class="rule-title">The system's confidence may change.</span>
+              <span class="rule-desc">VERI and the verification core will continuously update your calculated Trust Level based on micro-interactions.</span>
+            </div>
+          </li>
+          <li class="rule-item">
+            <span class="rule-num">04</span>
+            <div class="rule-content">
+              <span class="rule-title">Reach the final decision.</span>
+              <span class="rule-desc">Survive all 7 rounds to face the definitive verdict: are you truly human, or an impeccably trained synthetic impostor?</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="modal-footer">
+        <span class="esc-hint">Press ESC to dismiss</span>
+        <button class="btn-modal-action" data-close-modal>UNDERSTOOD</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div id="modal-settings" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-set-title" aria-hidden="true">
+    <div class="game-modal">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-badge">CONFIG</span>
+          <h2 id="modal-set-title" class="modal-title">SYSTEM PREFERENCES</h2>
+        </div>
+        <button class="modal-close-btn" data-close-modal aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="settings-group">
+          <!-- Sound Toggle -->
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">8-BIT SYNTHESIZER AUDIO</span>
+              <span class="setting-desc">Real-time Web Audio procedural sound effects & companion bleeps</span>
+            </div>
+            <label class="retro-toggle">
+              <input type="checkbox" id="toggle-sound-setting" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- Animation Toggle -->
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">VISUAL MOTION & PARTICLES</span>
+              <span class="setting-desc">Dynamic background grid drift, matrix nodes, and floating idle bobbing</span>
+            </div>
+            <label class="retro-toggle">
+              <input type="checkbox" id="toggle-anim-setting" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- CRT Effects Toggle -->
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">CRT SCANLINES & VIGNETTE</span>
+              <span class="setting-desc">Simulate authentic phosphor display curvature and scanline overlay</span>
+            </div>
+            <label class="retro-toggle">
+              <input type="checkbox" id="toggle-crt-setting" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <span class="esc-hint">Settings persist locally</span>
+        <button class="btn-modal-action" data-close-modal>APPLY & EXIT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       9. START GAME CRT TRANSITION OVERLAY
+       ==================================================================== -->
+  <div id="transition-curtain" class="transition-curtain" aria-hidden="true">
+    <div class="terminal-boot-box">
+      <div class="boot-header">
+        <span>VERIFYNET SIMULATION CORE</span>
+        <span>INITIALIZING...</span>
+      </div>
+      <div id="boot-lines" class="boot-lines"></div>
+      <div class="boot-progress-bar">
+        <div id="boot-progress-fill" class="boot-progress-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/audio.js"></script>
+  <script src="js/background.js"></script>
+  <script src="js/veri.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
