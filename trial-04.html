@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VERiFYNET — Trial 04: Staging Quarantine</title>
+  <meta name="description" content="Trial 04 staging handoff environment. Progress saved from Rounds 01-03.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Press+Start+2P&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/veri.css">
+  <link rel="stylesheet" href="css/game.css">
+  <style>
+    .staging-card {
+      background: #141724;
+      border: 2px solid var(--color-purple);
+      border-radius: 6px;
+      padding: 2.5rem;
+      max-width: 680px;
+      margin: 2.5rem auto;
+      text-align: center;
+      box-shadow: 0 0 35px var(--color-purple-glow);
+    }
+    .staging-badge {
+      display: inline-block;
+      font-family: var(--font-pixel);
+      font-size: 0.72rem;
+      color: var(--color-purple);
+      background: rgba(167, 139, 250, 0.1);
+      border: 1px solid var(--color-purple);
+      padding: 0.35rem 0.8rem;
+      border-radius: 2px;
+      margin-bottom: 1.25rem;
+    }
+    .staging-title {
+      font-size: 2.2rem;
+      color: var(--text-main);
+      margin-bottom: 0.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .staging-status-line {
+      font-family: var(--font-pixel);
+      font-size: 0.78rem;
+      color: var(--color-lime);
+      margin-bottom: 1.5rem;
+    }
+    .staging-desc {
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      text-align: left;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 1.25rem;
+      border-radius: 4px;
+      border-left: 3px solid var(--color-purple);
+    }
+    .staging-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn-stage {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.85rem 1.4rem;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .btn-stage-primary {
+      background: var(--color-lime);
+      color: #0c0e14;
+      border: none;
+      box-shadow: 0 0 15px var(--color-lime-glow);
+    }
+    .btn-stage-primary:hover {
+      background: #e4ff78;
+      transform: translateY(-2px);
+    }
+    .btn-stage-secondary {
+      background: var(--bg-panel);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+    }
+    .btn-stage-secondary:hover {
+      border-color: var(--color-cyan);
+      color: var(--color-cyan);
+    }
+  </style>
+</head>
+<body>
+  <div class="crt-overlay"></div>
+  <div class="crt-vignette"></div>
+
+  <div class="gameplay-wrapper">
+    <header class="game-hud" role="banner">
+      <div class="hud-left">
+        <a href="index.html" class="brand-section" style="text-decoration: none; color: inherit;">
+          <div class="brand-logo-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16v3H4V4zm0 13h16v3H4v-3zm3-10h10v7H7V7zm3 2v3h4V9h-4z"/></svg>
+          </div>
+          <div class="brand-info">
+            <span class="brand-name">VERiFYNET</span>
+            <span class="brand-subtitle">THE HUMAN TRIAL</span>
+          </div>
+        </a>
+      </div>
+      <div class="hud-center">
+        <span class="round-telemetry-title">ROUND 04 / 07 [STANDBY]</span>
+        <div class="progress-tracker-bar">
+          <span class="step-node completed">[01]</span>
+          <span class="step-connector">—</span>
+          <span class="step-node completed">[02]</span>
+          <span class="step-connector">—</span>
+          <span class="step-node completed">[03]</span>
+          <span class="step-connector">—</span>
+          <span class="step-node active">[04]</span>
+          <span class="step-connector">—</span>
+          <span class="step-node upcoming">[05]</span>
+          <span class="step-connector">—</span>
+          <span class="step-node upcoming">[06]</span>
+          <span class="step-connector">—</span>
+          <span class="step-node upcoming">[07]</span>
+        </div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-session-badge">
+          <span>TRIAL 04 HANDOFF</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="staging-card">
+        <div class="staging-badge">PHASE 02 COMPLETE · ALL 3 ROUNDS VERIFIED</div>
+        <h1 class="staging-title">TRIAL 04: THE OBSERVER</h1>
+        <div class="staging-status-line">CONFIDENCE INDEX: 78% (IRREGULAR DISSONANCE DETECTED)</div>
+
+        <div class="staging-desc">
+          >> TRIALS 01, 02, AND 03 CONCLUDED SUCCESSFULLY.<br>
+          >> TELEMETRY RECORD: Subject identified traffic lights (R1: 98%), bicycles (R2: 91%), and observed the digital clock temporal anomaly (R3: 78%).<br>
+          >> SYSTEM EVENT: The simulation core experienced an unexpected cognitive divergence during Trial 03.<br>
+          >> VERI MEMORY DUMP: <em>"I need a moment to think about what you just did..."</em><br>
+          >> PHASE 03 STAGING: Trials 04 through 07 are locked in quarantine awaiting upcoming protocol expansion.
+        </div>
+
+        <div class="staging-actions">
+          <a href="trial-01.html" class="btn-stage btn-stage-primary" id="btn-replay-trials">
+            <span>↺ REPLAY TRIALS 01–03</span>
+          </a>
+          <a href="index.html" class="btn-stage btn-stage-secondary">
+            <span>◀ RETURN TO TITLE SCREEN</span>
+          </a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Reset state when clicking replay
+    document.getElementById('btn-replay-trials').addEventListener('click', () => {
+      localStorage.removeItem('verifynet_gamestate');
+    });
+  </script>
+</body>
+</html>

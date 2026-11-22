@@ -1,0 +1,840 @@
+/* ==========================================================================
+   VERIFYNET — GAMEPLAY CSS (css/game.css)
+   Shared Gameplay HUD, Challenge Stages (R1, R2, R3), Terminal Log,
+   Confidence Meter, and Level Transition Glitch Systems
+   ========================================================================== */
+
+/* Main Gameplay Grid Layout */
+.gameplay-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  z-index: 10;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
+}
+
+/* ==========================================================================
+   A. TOP NAVIGATION HUD
+   ========================================================================== */
+.game-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  background: rgba(26, 29, 42, 0.9);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  backdrop-filter: blur(14px);
+  margin-bottom: 1.25rem;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.hud-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.hud-session-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--color-lime);
+  background: rgba(216, 243, 106, 0.1);
+  padding: 0.2rem 0.55rem;
+  border-radius: 2px;
+  border: 1px solid var(--color-lime);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.hud-session-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-lime);
+  box-shadow: 0 0 6px var(--color-lime);
+  animation: pulseStatus 1.8s infinite;
+}
+
+/* B. Seven-Round Progress Tracker */
+.hud-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.round-telemetry-title {
+  font-family: var(--font-pixel);
+  font-size: 0.75rem;
+  color: var(--color-cyan);
+  letter-spacing: 0.08em;
+}
+
+.progress-tracker-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.step-node {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.45rem;
+  border-radius: 2px;
+  background: rgba(34, 38, 56, 0.7);
+  border: 1px solid rgba(146, 148, 161, 0.25);
+  color: var(--text-secondary);
+  transition: all var(--transition-normal);
+}
+
+.step-node.completed {
+  background: var(--color-lime);
+  border-color: var(--color-lime);
+  color: #0c0e14;
+  box-shadow: 0 0 10px var(--color-lime-glow);
+}
+
+.step-node.active {
+  background: rgba(216, 243, 106, 0.15);
+  border-color: var(--color-lime);
+  color: var(--color-lime);
+  box-shadow: 0 0 12px var(--color-lime-glow);
+  animation: pulseActiveStep 1.8s infinite alternate;
+}
+
+@keyframes pulseActiveStep {
+  0% { border-color: var(--color-lime); box-shadow: 0 0 5px var(--color-lime); }
+  100% { border-color: #ffffff; box-shadow: 0 0 16px var(--color-lime); }
+}
+
+.step-node.upcoming {
+  opacity: 0.65;
+}
+
+.step-node.unstable {
+  border-color: var(--color-purple);
+  color: var(--color-purple);
+  animation: unstableNodeGlitch 2.5s infinite;
+}
+
+@keyframes unstableNodeGlitch {
+  0%, 90%, 100% { transform: none; opacity: 1; }
+  92% { transform: skewX(-10deg); color: var(--color-error); }
+  95% { transform: skewX(8deg); }
+}
+
+.step-connector {
+  color: rgba(146, 148, 161, 0.35);
+  font-size: 0.65rem;
+}
+
+/* Right HUD: Controls & Confidence Mini */
+.hud-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ==========================================================================
+   E. CONFIDENCE DISPLAY & STATUS STRIP
+   ========================================================================== */
+.confidence-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(20, 23, 34, 0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 0.6rem 1.25rem;
+  margin-bottom: 1.25rem;
+  gap: 1.5rem;
+}
+
+.confidence-label-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.confidence-val {
+  color: var(--color-lime);
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-shadow: 0 0 8px var(--color-lime-glow);
+  transition: color 0.4s ease;
+}
+
+.confidence-val.warning {
+  color: var(--color-purple);
+  text-shadow: 0 0 8px var(--color-purple-glow);
+}
+
+.confidence-val.danger {
+  color: var(--color-error);
+  text-shadow: 0 0 8px rgba(255, 100, 124, 0.6);
+}
+
+.confidence-meter-container {
+  flex: 1;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  position: relative;
+}
+
+.confidence-meter-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--color-lime), var(--color-cyan));
+  box-shadow: 0 0 10px var(--color-lime);
+  transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.8s ease;
+}
+
+.confidence-meter-fill.warning {
+  background: linear-gradient(90deg, var(--color-purple), var(--color-cyan));
+  box-shadow: 0 0 10px var(--color-purple);
+}
+
+/* ==========================================================================
+   MAIN GAMEPLAY STAGE (2 COLUMNS: CHALLENGE + COMPANION/LOG)
+   ========================================================================== */
+.gameplay-stage {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.5rem;
+  flex: 1;
+  align-items: start;
+}
+
+/* ==========================================================================
+   C. MAIN CHALLENGE PANEL
+   ========================================================================== */
+.challenge-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.challenge-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  border-bottom: 1px solid rgba(146, 148, 161, 0.15);
+  padding-bottom: 1rem;
+}
+
+.challenge-protocol-tag {
+  font-family: var(--font-pixel);
+  font-size: 0.62rem;
+  color: var(--color-purple);
+  letter-spacing: 0.1em;
+}
+
+.challenge-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.challenge-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+  text-transform: uppercase;
+}
+
+.challenge-trial-tag {
+  font-family: var(--font-pixel);
+  font-size: 0.72rem;
+  color: var(--color-lime);
+  background: rgba(216, 243, 106, 0.1);
+  padding: 0.25rem 0.6rem;
+  border-radius: 2px;
+  border: 1px solid var(--color-lime);
+}
+
+.challenge-instructions {
+  font-family: var(--font-main);
+  font-size: 1.05rem;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.challenge-subtext {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   4 & 5. 3x3 CAPTCHA TILES GRID
+   ========================================================================== */
+.captcha-grid-3x3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem;
+  width: 100%;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.captcha-tile {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: #11131E;
+  border: 2px solid #2B324D;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.captcha-tile:hover {
+  border-color: var(--color-cyan);
+  box-shadow: 0 0 12px var(--color-cyan-glow);
+  transform: translateY(-2px);
+}
+
+.captcha-tile svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+/* Selected Tile State */
+.captcha-tile.selected {
+  border-color: var(--color-lime) !important;
+  box-shadow: 0 0 20px var(--color-lime-glow), inset 0 0 15px rgba(216, 243, 106, 0.2);
+  transform: scale(0.97);
+}
+
+.captcha-tile.selected svg {
+  filter: brightness(1.2) contrast(1.1);
+}
+
+/* Selection check indicator badge */
+.tile-check-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  background: var(--color-lime);
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px var(--color-lime);
+  z-index: 5;
+  animation: checkPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.captcha-tile.selected .tile-check-badge {
+  display: flex;
+}
+
+.tile-check-badge svg {
+  width: 14px;
+  height: 14px;
+  fill: #0c0e14;
+}
+
+@keyframes checkPop {
+  0% { transform: scale(0.4); }
+  100% { transform: scale(1); }
+}
+
+/* ==========================================================================
+   6. ROUND 03: 2x2 ANOMALY ARENA
+   ========================================================================== */
+.anomaly-arena-2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.anomaly-card {
+  position: relative;
+  background: #0E101A;
+  border: 2px solid #2B324D;
+  border-radius: 6px;
+  padding: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.anomaly-card:hover {
+  border-color: var(--color-purple);
+  box-shadow: 0 0 16px var(--color-purple-glow);
+  transform: translateY(-2px);
+}
+
+.anomaly-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-pixel);
+  font-size: 0.68rem;
+  color: var(--color-purple);
+  border-bottom: 1px dashed rgba(167, 139, 250, 0.25);
+  padding-bottom: 0.4rem;
+}
+
+.anomaly-card-svg-wrap {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #080A10;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.anomaly-card-svg-wrap svg {
+  width: 100%;
+  height: 100%;
+}
+
+.anomaly-card.selected {
+  border-color: var(--color-lime);
+  background: #141724;
+  box-shadow: 0 0 25px var(--color-lime-glow);
+}
+
+.anomaly-card.selected .anomaly-card-header {
+  color: var(--color-lime);
+  border-bottom-color: var(--color-lime);
+}
+
+/* Challenge Action Controls Row */
+.challenge-controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(146, 148, 161, 0.15);
+}
+
+.selection-readout {
+  font-family: var(--font-pixel);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.selection-readout span {
+  color: var(--color-lime);
+}
+
+.challenge-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-verify {
+  background: var(--color-lime);
+  color: #0c0e14;
+  font-family: var(--font-pixel);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.85rem 1.4rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: all var(--transition-fast);
+  box-shadow: 0 0 15px var(--color-lime-glow);
+}
+
+.btn-verify:hover:not(:disabled) {
+  background: #e4ff78;
+  transform: translateY(-1px);
+  box-shadow: 0 0 25px rgba(216, 243, 106, 0.5);
+}
+
+.btn-verify:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-clear {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.75rem 1.1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-clear:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  border-color: var(--text-secondary);
+}
+
+/* Feedback message notification */
+.challenge-feedback {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+  border-radius: 4px;
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.challenge-feedback.active {
+  display: flex;
+  animation: feedbackSlideIn 0.3s ease;
+}
+
+.challenge-feedback.success {
+  background: rgba(216, 243, 106, 0.1);
+  border: 1px solid var(--color-lime);
+  color: var(--color-lime);
+}
+
+.challenge-feedback.error {
+  background: rgba(255, 100, 124, 0.1);
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
+  animation: shakeError 0.4s ease;
+}
+
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+@keyframes feedbackSlideIn {
+  0% { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   SIDEBAR: VERI COMPANION & F. LIVE SYSTEM LOG
+   ========================================================================== */
+.gameplay-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Live Terminal Log */
+.system-log-terminal {
+  background: #0E1018;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+  font-family: var(--font-mono);
+}
+
+.log-terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(146, 148, 161, 0.15);
+  padding-bottom: 0.45rem;
+  margin-bottom: 0.5rem;
+}
+
+.log-title {
+  font-family: var(--font-pixel);
+  font-size: 0.62rem;
+  color: var(--color-cyan);
+  letter-spacing: 0.05em;
+}
+
+.log-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-lime);
+  box-shadow: 0 0 6px var(--color-lime);
+  animation: pulseStatus 1.5s infinite;
+}
+
+.log-terminal-body {
+  height: 140px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.log-terminal-body::-webkit-scrollbar {
+  width: 4px;
+}
+.log-terminal-body::-webkit-scrollbar-thumb {
+  background: rgba(146, 148, 161, 0.3);
+  border-radius: 2px;
+}
+
+.log-entry {
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.log-entry .log-tag {
+  color: var(--color-cyan);
+  font-weight: 700;
+}
+.log-entry .log-tag.warn { color: #ffb17a; }
+.log-entry .log-tag.error { color: var(--color-error); }
+.log-entry .log-tag.veri { color: var(--color-lime); }
+
+/* ==========================================================================
+   G. ROUND COMPLETION OVERLAY
+   ========================================================================== */
+.round-completion-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1040;
+  background: rgba(10, 12, 18, 0.88);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.round-completion-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.completion-card {
+  background: #141724;
+  border: 2px solid var(--color-lime);
+  border-radius: 6px;
+  padding: 2.25rem;
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(216, 243, 106, 0.25);
+  transform: scale(0.95);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.round-completion-overlay.active .completion-card {
+  transform: scale(1);
+}
+
+.completion-badge {
+  font-family: var(--font-pixel);
+  font-size: 0.75rem;
+  color: var(--color-lime);
+  background: rgba(216, 243, 106, 0.1);
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--color-lime);
+  align-self: center;
+  border-radius: 2px;
+}
+
+.completion-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+}
+
+.completion-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 0.85rem;
+  border-radius: 4px;
+  border: 1px solid rgba(146, 148, 161, 0.15);
+}
+
+.completion-stat-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.completion-stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+}
+
+.completion-stat-value {
+  font-family: var(--font-pixel);
+  font-size: 0.95rem;
+  color: var(--color-cyan);
+}
+
+.completion-veri-quote {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--color-lime);
+  background: rgba(216, 243, 106, 0.05);
+  border-left: 3px solid var(--color-lime);
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+}
+
+.btn-continue-round {
+  background: var(--color-lime);
+  color: #0c0e14;
+  font-family: var(--font-pixel);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 1rem 1.6rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 0 20px var(--color-lime-glow);
+  transition: all var(--transition-fast);
+}
+
+.btn-continue-round:hover {
+  background: #e4ff78;
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px var(--color-lime-glow);
+}
+
+/* ==========================================================================
+   ROUND 03 GLITCH MALFUNCTION EFFECTS
+   ========================================================================== */
+.glitch-active {
+  animation: screenGlitchTwitch 0.6s ease;
+}
+
+@keyframes screenGlitchTwitch {
+  0% { transform: none; filter: none; }
+  20% { transform: skewX(-4deg) translateX(5px); filter: drop-shadow(-3px 0 #FF647C) drop-shadow(3px 0 #62D9E8); }
+  40% { transform: skewX(3deg) translateX(-4px); }
+  60% { transform: translateY(2px); filter: hue-rotate(90deg); }
+  80% { transform: skewX(-1deg); }
+  100% { transform: none; filter: none; }
+}
+
+/* Flash effect for anomaly */
+.glitch-flash-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(167, 139, 250, 0.35);
+  z-index: 1060;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+
+.glitch-flash-overlay.active {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN FOR GAMEPLAY
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .gameplay-stage {
+    grid-template-columns: 1fr;
+  }
+  .gameplay-sidebar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .game-hud {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .hud-center {
+    order: 2;
+  }
+  .hud-left {
+    justify-content: space-between;
+  }
+  .hud-right {
+    justify-content: space-between;
+    order: 3;
+  }
+  .progress-tracker-bar {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .gameplay-sidebar {
+    grid-template-columns: 1fr;
+  }
+  .captcha-grid-3x3 {
+    gap: 0.5rem;
+  }
+  .anomaly-arena-2x2 {
+    gap: 0.75rem;
+  }
+  .challenge-title {
+    font-size: 1.4rem;
+  }
+  .challenge-controls-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .challenge-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
