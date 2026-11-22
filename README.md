@@ -75,6 +75,18 @@ The game features seven distinct, fully implemented trials exploring subconsciou
 
 - **Lead Developer & Creator:** Raghav Bansal ([bansalraghav9518@gmail.com](mailto:bansalraghav9518@gmail.com))
 - **GitHub Repository:** [raghavbansal9518-cloud/verifynet-human-trial](https://github.com/raghavbansal9518-cloud/verifynet-human-trial)
+- **Live Deployment (GitHub Pages):** [https://raghavbansal9518-cloud.github.io/verifynet-human-trial/](https://raghavbansal9518-cloud.github.io/verifynet-human-trial/)
+
+---
+
+## 🌐 Public Live Hosting & Continuous Deployment
+
+VERiFYNET is configured for automatic, zero-configuration hosting on **GitHub Pages**:
+
+* **Live Public URL:** [https://raghavbansal9518-cloud.github.io/verifynet-human-trial/](https://raghavbansal9518-cloud.github.io/verifynet-human-trial/)
+* **CI/CD Pipeline:** [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
+* **Automatic Updates:** Every verified commit pushed to the `main` branch automatically executes the full 48-assertion test suite before publishing the updated static bundle.
+* **Fallback Publishing:** Native `main` root branch deployment supported via `.nojekyll`.
 
 ---
 
