@@ -253,7 +253,7 @@ class VerifyNetGameEngine {
 
   updateConfidence(targetVal) {
     if (typeof targetVal === 'number') {
-      this.state.confidence = Math.max(10, Math.min(100, targetVal));
+      this.state.confidence = Math.max(0, Math.min(100, targetVal));
       this.saveState();
     }
 

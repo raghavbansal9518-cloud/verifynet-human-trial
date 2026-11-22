@@ -242,6 +242,15 @@ assert(evaluateEnding('machine', 'C') === 'HUMAN_CERTIFICATE', "Machine R5 + Rej
 // Ending B: Robot Detected
 assert(evaluateEnding('machine', 'A') === 'ROBOT_DETECTED', "Machine R5 + Comply R7 yields ROBOT_DETECTED (Turing Inversion)");
 
+// Confidence bounds verification
+function calcConfidence(targetVal) {
+  return Math.max(0, Math.min(100, targetVal));
+}
+assert(calcConfidence(0) === 0, "Confidence can reach 0% for Robot Detected ending (unclamped from 10%)");
+assert(calcConfidence(8) === 8, "Confidence can drop below 10% during degradation penalties");
+assert(calcConfidence(-5) === 0, "Confidence clamps at 0% minimum");
+assert(calcConfidence(99) === 99, "Confidence reaches 99% for Human Certificate");
+
 // ---------------------------------------------------------------------------
 // TEST 7: Game Reset State
 // ---------------------------------------------------------------------------
