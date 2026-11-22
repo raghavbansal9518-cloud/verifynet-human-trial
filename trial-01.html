@@ -262,6 +262,29 @@
   </div>
 
   <!-- ====================================================================
+       H. INTERROGATION OVERLAY (Round 07 Final Existential Query)
+       ==================================================================== -->
+  <div id="interrogation-overlay" class="interrogation-overlay" role="dialog" aria-modal="true" aria-labelledby="interrogation-title" aria-hidden="true">
+    <div class="interrogation-dialog-box">
+      <div class="interrogation-telemetry" id="interrogation-telemetry">
+        <!-- Lines injected dynamically by js/game.js -->
+      </div>
+      <h2 class="interrogation-question-title" id="interrogation-title">ARE YOU HUMAN?</h2>
+      <div class="interrogation-actions-row">
+        <button class="btn-interrogation-choice" id="btn-choice-yes">YES</button>
+        <button class="btn-interrogation-choice" id="btn-choice-thinkso">I THINK SO</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       I. FINAL ENDING OVERLAY (Ending A: Human Certificate / Ending B: Robot Detected)
+       ==================================================================== -->
+  <div id="final-ending-overlay" class="final-ending-overlay" role="dialog" aria-modal="true" aria-labelledby="ending-verdict-title" aria-hidden="true">
+    <!-- Rendered dynamically by js/game.js -->
+  </div>
+
+  <!-- ====================================================================
        CRT LEVEL TRANSITION CURTAIN
        ==================================================================== -->
   <div id="transition-curtain" class="transition-curtain" aria-hidden="true">
